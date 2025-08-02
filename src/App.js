@@ -40,7 +40,7 @@ export default function App() {
         onToggleItem={handleToggleItem}
       />{" "}
       {/* Display list of packed items */}
-      <Stats /> {/* Display statistics (currently static) */}
+      <Stats items={items} /> {/* Display statistics (currently static) */}
     </div>
   );
 }
@@ -146,10 +146,18 @@ function Item({ item, onDeleteItem, onToggleItem }) {
 }
 
 // Component to show stats (currently static text)
-function Stats() {
+function Stats({ items }) {
+  const numItems = items.length;
+  const numPacked = items.filter(item => item.packed).length;
+
+  const percentage = Math.round((numPacked / numItems) * 100);
+
   return (
     <footer className="stats">
-      <em>🤦‍♂️ You have X items on your list, and you already packed X (X%)</em>
+      <em>
+        🤦‍♂️ You have {numItems} items on your list, and you already packed{" "}
+        {numPacked} ({percentage}%)
+      </em>
     </footer>
   );
 }
