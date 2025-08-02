@@ -2,11 +2,11 @@
 import { useState } from "react";
 
 // Sample list of items that could be used as initial data (not currently in use)
-const initialItems = [
-  { id: 1, description: "Passports", quantity: 2, packed: false },
-  { id: 2, description: "Socks", quantity: 12, packed: true },
-  { id: 3, description: "Charger", quantity: 11, packed: false },
-];
+// const initialItems = [
+//   { id: 1, description: "Passports", quantity: 2, packed: false },
+//   { id: 2, description: "Socks", quantity: 12, packed: true },
+//   { id: 3, description: "Charger", quantity: 11, packed: false },
+// ];
 
 // Main App component
 export default function App() {
@@ -17,12 +17,17 @@ export default function App() {
   function handleAddItem(item) {
     setItems(items => [...items, item]); // Spread current items and add the new one
   }
+  // Function to handle deleting a new item to the list
+  function handleDeleteItem(id) {
+    setItems(items => items.filter(item => item.id !== id));
+  }
 
   return (
     <div className="app">
       <Logo /> {/* Header component */}
       <Form onAddItem={handleAddItem} /> {/* Form to add new items */}
-      <PackingList items={items} /> {/* Display list of packed items */}
+      <PackingList items={items} onDeleteItem={handleDeleteItem} />{" "}
+      {/* Display list of packed items */}
       <Stats /> {/* Display statistics (currently static) */}
     </div>
   );
@@ -91,13 +96,13 @@ function Form({ onAddItem }) {
 }
 
 // Component to render the list of packing items
-function PackingList({ items }) {
+function PackingList({ items, onDeleteItem }) {
   return (
     <div className="list">
       <ul>
         {items.map(item => (
           // Render each item using the Item component
-          <Item item={item} key={item.id} />
+          <Item item={item} onDeleteItem={onDeleteItem} key={item.id} />
         ))}
       </ul>
     </div>
@@ -105,7 +110,7 @@ function PackingList({ items }) {
 }
 
 // Component to render a single item
-function Item({ item }) {
+function Item({ item, onDeleteItem }) {
   return (
     <li>
       {/* If item is packed, add line-through styling */}
@@ -113,7 +118,7 @@ function Item({ item }) {
         {item.description} {item.quantity}
       </span>
       {/* Placeholder delete button (not functional yet) */}
-      <button>❌</button>
+      <button onClick={() => onDeleteItem(item.id)}>❌</button>
     </li>
   );
 }
